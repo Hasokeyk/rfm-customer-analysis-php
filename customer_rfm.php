@@ -84,6 +84,8 @@
                 $frequency_count[$detail['id']] = count($detail['customer_detail']['buy_list']);
             }
             
+            print_r($frequency_count);
+            
             $this->frequency_data = $frequency_count;
             return $frequency_count;
         }
@@ -170,10 +172,12 @@
                 $total_order_count = ($total_order_count??0) + 1;
             }
             
+            echo $total_order_count;
+            
             foreach($data as $customer_id => $customer_r_data){
                 foreach($this->frequency_formula as $score => $val){
                     $percent = ($total_order / $total_order_count) * $val;
-                    if($percent >= $customer_r_data){
+                    if($percent <= $customer_r_data){
                         break;
                     }
                 }
@@ -196,7 +200,7 @@
             foreach($data as $customer_id => $customer_r_data){
                 foreach($this->monetary_formula as $score => $val){
                     $percent = ($total_price / $total_price_count) * $val;
-                    if($percent >= $customer_r_data){
+                    if($percent < $customer_r_data){
                         break;
                     }
                 }
