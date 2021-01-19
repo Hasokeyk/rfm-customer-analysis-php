@@ -13,34 +13,27 @@
         private $monetary_data  = [];
         
         public $recency_formula   = [
-            5 => 0.20,
-            4 => 0.40,
-            3 => 0.60,
-            2 => 0.90,
-            1 => 1,
+            1 => 0.25,
+            2 => 0.50,
+            3 => 0.75,
+            4 => 1,
         ];
         public $frequency_formula = [
-            1 => 0.20,
-            2 => 0.40,
-            3 => 0.60,
-            4 => 0.90,
-            5 => 1,
+            4 => 0.25,
+            3 => 0.50,
+            2 => 0.75,
+            1 => 1,
         ];
         public $monetary_formula  = [
-            1 => 0.20,
-            2 => 0.40,
-            3 => 0.60,
-            4 => 0.90,
-            5 => 1,
+            4 => 0.25,
+            3 => 0.50,
+            2 => 0.75,
+            1 => 1,
         ];
         
         public $priority = 'RFM';
         
         public function __construct($buy_list){
-            
-            krsort($this->monetary_formula);
-            //krsort($this->recency_formula);
-            sort($this->frequency_formula);
             
             $this->buy_list = $buy_list;
             
@@ -83,8 +76,6 @@
             foreach($buy_list as $detail){
                 $frequency_count[$detail['id']] = count($detail['customer_detail']['buy_list']);
             }
-            
-            print_r($frequency_count);
             
             $this->frequency_data = $frequency_count;
             return $frequency_count;
@@ -172,12 +163,10 @@
                 $total_order_count = ($total_order_count??0) + 1;
             }
             
-            echo $total_order_count;
-            
             foreach($data as $customer_id => $customer_r_data){
                 foreach($this->frequency_formula as $score => $val){
                     $percent = ($total_order / $total_order_count) * $val;
-                    if($percent <= $customer_r_data){
+                    if($percent >= $customer_r_data){
                         break;
                     }
                 }
@@ -198,9 +187,11 @@
             }
             
             foreach($data as $customer_id => $customer_r_data){
+                
                 foreach($this->monetary_formula as $score => $val){
                     $percent = ($total_price / $total_price_count) * $val;
-                    if($percent < $customer_r_data){
+                    
+                    if($percent >= $customer_r_data){
                         break;
                     }
                 }
