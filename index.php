@@ -1,9 +1,8 @@
 <?php
     
-    require 'customer_rfm.php';
+    require (__DIR__).'/src/customer_rfm.php';
     
     use consumer_rfm\customer_rfm;
-    
     
     $fake_data = json_decode(file_get_contents((__DIR__).'/test.json'),true);
     
@@ -13,4 +12,4 @@
     $recency_calc = $customer->score_calc();
     
     print_r($recency_calc);
-    print_r($fake_data);
+    //print_r($fake_data);

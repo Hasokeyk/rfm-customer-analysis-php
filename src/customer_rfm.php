@@ -33,6 +33,17 @@
         
         public $priority = 'RFM';
         
+        public $customer_groups = [
+            'best_customer'             => 'Best Customer',
+            'loyal_customer'            => 'Loyal Customer',
+            'new_customer'              => 'New Customer',
+            'promising_customer'        => 'Promising',
+            'warning_customer'          => 'Customer Needs Attention',
+            'about_to_sleep_customer'   => 'About to Sleep',
+            'cannot_lose_them_customer' => 'Cannot Lose Them',
+            'lost_customer'             => 'Lost Customers',
+        ];
+        
         public function __construct($buy_list){
             
             $this->buy_list = $buy_list;
@@ -118,16 +129,16 @@
             preg_match('|([a-z])([a-z])([a-z])|', mb_strtolower($this->priority, 'utf8'), $p);
             unset($p[0]);
             foreach($p as $func_name){
-                $score_results[] = $$func_name;
+                $score_results[$func_name] = $$func_name;
             }
             
-            foreach($score_results as $id => $customer_score){
+            foreach($score_results as $key => $customer_score){
                 foreach($customer_score as $customer_id => $score){
-                    $customer_results[$customer_id] = (int) ($customer_results[$customer_id]??null).$score;
+                    $customer_results[$customer_id] = ($customer_results[$customer_id]??null).$score;
                 }
             }
             
-            arsort($customer_results,SORT_NATURAL);
+            //arsort($customer_results, SORT_NATURAL);
             return $customer_results;
         }
         
