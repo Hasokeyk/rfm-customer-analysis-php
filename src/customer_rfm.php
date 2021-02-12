@@ -34,15 +34,73 @@
         public $priority = 'RFM';
         
         public $customer_groups = [
-            'best_customer'             => 'Best Customer',
-            'loyal_customer'            => 'Loyal Customer',
-            'new_customer'              => 'New Customer',
-            'promising_customer'        => 'Promising',
-            'warning_customer'          => 'Customer Needs Attention',
-            'about_to_sleep_customer'   => 'About to Sleep',
-            'cannot_lose_them_customer' => 'Cannot Lose Them',
-            'lost_customer'             => 'Lost Customers',
+            'best_customer'             => [
+                'name' => 'Best Customer',
+                'rfm'  => [
+                    'r' => 1,
+                    'f' => 1,
+                    'm' => 1,
+                ],
+            ],
+            'loyal_customer'            => [
+                'name' => 'Loyal Customer',
+                'rfm'  => [
+                    'r' => 1,
+                    'f' => 1,
+                    'm' => 1,
+                ],
+            ],
+            'new_customer'              => [
+                'name' => 'New Customer',
+                'rfm'  => [
+                    'r' => 1,
+                    'f' => 1,
+                    'm' => 1,
+                ],
+            ],
+            'promising_customer'        => [
+                'name' => 'Promising',
+                'rfm'  => [
+                    'r' => 1,
+                    'f' => 1,
+                    'm' => 1,
+                ],
+            ],
+            'warning_customer'          => [
+                'name' => 'Customer Needs Attention',
+                'rfm'  => [
+                    'r' => 1,
+                    'f' => 1,
+                    'm' => 1,
+                ],
+            ],
+            'about_to_sleep_customer'   => [
+                'name' => 'About to Sleep',
+                'rfm'  => [
+                    'r' => 1,
+                    'f' => 1,
+                    'm' => 1,
+                ],
+            ],
+            'cannot_lose_them_customer' => [
+                'name' => 'Cannot Lose Them',
+                'rfm'  => [
+                    'r' => 1,
+                    'f' => 1,
+                    'm' => 1,
+                ],
+            ],
+            'lost_customer'             => [
+                'name' => 'Lost Customers',
+                'rfm'  => [
+                    'r' => 1,
+                    'f' => 1,
+                    'm' => 1,
+                ],
+            ],
         ];
+        
+        public $score = null;
         
         public function __construct($buy_list){
             
@@ -112,7 +170,37 @@
             $this->monetary_data = $monetary_count;
             return $monetary_count;
         }
+    
+        public function score_calc(){
         
+            $score_results    = [];
+            $customer_results = [];
+        
+            $r_data = $this->recency_calc();
+            $f_data = $this->frequency_calc();
+            $m_data = $this->monetary_calc();
+        
+            $r = $this->r_calc($r_data);
+            $f = $this->f_calc($f_data);
+            $m = $this->m_calc($m_data);
+        
+            preg_match('|([a-z])([a-z])([a-z])|', mb_strtolower($this->priority, 'utf8'), $p);
+            unset($p[0]);
+            foreach($p as $func_name){
+                $score_results[$func_name] = $$func_name;
+            }
+        
+            foreach($score_results as $key => $customer_score){
+                foreach($customer_score as $customer_id => $score){
+                    $customer_results[$customer_id] = ($customer_results[$customer_id]??null).$score;
+                }
+            }
+        
+            arsort($customer_results, SORT_NATURAL);
+            return $customer_results;
+        }
+        
+        /*
         public function score_calc(){
             
             $score_results    = [];
@@ -132,14 +220,33 @@
                 $score_results[$func_name] = $$func_name;
             }
             
+            print_r($score_results);
+            
             foreach($score_results as $key => $customer_score){
+                $c_id = 0;
+                $s = '';
                 foreach($customer_score as $customer_id => $score){
-                    $customer_results[$customer_id] = ($customer_results[$customer_id]??null).$score;
+                    $c_id = $customer_id;
+                    $s .= $score;
                 }
+                $customer_results[$c_id]['total'] = $s;
+                //$customer_results[$c_id][$key]    = $customer_score;
             }
             
             //arsort($customer_results, SORT_NATURAL);
+            $this->score = $customer_results;
             return $customer_results;
+        }
+        */
+        
+        public function customer_group($score = null){
+            
+            $score = $score??$this->score_calc();
+            
+            $uniq = array_unique($score);
+            
+            arsort($uniq);
+            return $uniq;
         }
         
         public function r_calc($data = null){

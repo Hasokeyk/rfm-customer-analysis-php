@@ -12,4 +12,4 @@
     $recency_calc = $customer->score_calc();
     
     print_r($recency_calc);
-    //print_r($fake_data);
+    print_r($fake_data);
