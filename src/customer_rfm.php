@@ -4,6 +4,8 @@
     namespace consumer_rfm;
     
     
+    use DateTime;
+
     class customer_rfm{
         
         public $buy_list = null;
@@ -13,22 +15,25 @@
         private $monetary_data  = [];
         
         public $recency_formula   = [
-            1 => 0.25,
-            2 => 0.50,
-            3 => 0.75,
-            4 => 1,
+            5 => 30,
+            4 => 45,
+            3 => 75,
+            2 => 100,
+            1 => 999,
         ];
         public $frequency_formula = [
-            4 => 0.25,
-            3 => 0.50,
-            2 => 0.75,
+            5 => 999,
+            4 => 8,
+            3 => 5,
+            2 => 3,
             1 => 1,
         ];
         public $monetary_formula  = [
-            4 => 0.25,
-            3 => 0.50,
-            2 => 0.75,
-            1 => 1,
+            5 => 9999,
+            4 => 500,
+            3 => 250,
+            2 => 100,
+            1 => 10,
         ];
         
         public $priority = 'RFM';
@@ -124,10 +129,15 @@
                 }
                 
                 $dates = $this->date_order_by($dates[$customer['id']]);
+    
+                $tarih1= new DateTime($dates[0]);
+                $tarih2= new DateTime();
+                $interval= $tarih1->diff($tarih2);
+                $day_diff =  $interval->format('%a');
                 
                 $recency_dates[$customer['id']] = [
                     'last_date'       => $dates[0],
-                    'last_date_day'   => date('z', strtotime($dates[0])) + 1,
+                    'last_date_day'   => $day_diff,
                     'total_day_count' => $total_day_count,
                 ];
                 
@@ -260,10 +270,11 @@
             
             foreach($data as $customer_id => $customer_r_data){
                 foreach($this->recency_formula as $score => $val){
-                    $percent = ($total_day / $total_day_count) * $val;
-                    if($percent <= $customer_r_data['last_date_day']){
+    
+                    if($customer_r_data['last_date_day'] <= $val){
                         break;
                     }
+                
                 }
                 $result[$customer_id] = $score;
             }
@@ -283,10 +294,11 @@
             
             foreach($data as $customer_id => $customer_r_data){
                 foreach($this->frequency_formula as $score => $val){
-                    $percent = ($total_order / $total_order_count) * $val;
-                    if($percent >= $customer_r_data){
+    
+                    if($customer_r_data >= $val){
                         break;
                     }
+                    
                 }
                 $result[$customer_id] = (int) $score;
             }
@@ -307,11 +319,11 @@
             foreach($data as $customer_id => $customer_r_data){
                 
                 foreach($this->monetary_formula as $score => $val){
-                    $percent = ($total_price / $total_price_count) * $val;
                     
-                    if($percent >= $customer_r_data){
+                    if($customer_r_data >= $val){
                         break;
                     }
+                    
                 }
                 $result[$customer_id] = $score;
             }
