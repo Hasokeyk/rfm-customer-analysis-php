@@ -1,7 +1,7 @@
 <?php
     
     
-    namespace customer_frm;
+    namespace customer_rfm;
     
     use DateTime;
     

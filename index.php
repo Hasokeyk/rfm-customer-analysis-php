@@ -2,7 +2,7 @@
     
     require (__DIR__).'/src/customer_rfm.php';
     
-    use customer_frm\customer_rfm;
+    use customer_rfm\customer_rfm;
     
     $fake_data = json_decode(file_get_contents((__DIR__).'/test-2.json'),true);
     
