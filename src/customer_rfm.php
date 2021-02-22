@@ -1,8 +1,7 @@
 <?php
     
     
-    namespace consumer_rfm;
-    
+    namespace customer_frm;
     
     use DateTime;
     
@@ -234,7 +233,7 @@
             $t_musteri = count($this->buy_list);
             $k_musteri = count($this->c_cont);
             
-            echo $t_musteri.' Müşteriden. '.$k_musteri.' adeti kategorilendirildi. '.($t_musteri - $k_musteri).' adet müşteri kaldı'."\n";
+            //echo $t_musteri.' Müşteriden. '.$k_musteri.' adeti kategorilendirildi. '.($t_musteri - $k_musteri).' adet müşteri kaldı'."\n";
             
             return $result_cat;
         }
