@@ -1,5 +1,5 @@
 {
-    "name": "hasokeyk/RFM-Customer-Analysis-Php",
+    "name": "hasokeyk/rfm-customer-analysis-php",
     "type": "library",
     "description": "With this library, you can RFM score your customers.",
     "keywords": ["rfm","php","rfm score","customer"],
