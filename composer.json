@@ -1,0 +1,23 @@
+{
+    "name": "hasokeyk/RFM-Customer-Analysis-Php",
+    "type": "library",
+    "description": "With this library, you can RFM score your customers.",
+    "keywords": ["rfm","php","rfm score","customer"],
+    "homepage": "https://hayatikodla.net",
+    "license": "MIT",
+	"minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Hasan Yüksektepe",
+            "email": "hasanhasokeyk@hotmail.com",
+            "homepage": "https://hayatikodla.net",
+            "role": "Developer"
+        }
+    ],
+	"require": {
+        "php": ">=7.0.0"
+    },
+    "autoload": {
+        "files": ["src/customer_rfm.php"]
+    }
+}

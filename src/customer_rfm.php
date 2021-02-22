@@ -16,10 +16,10 @@
         
         public $recency_formula   = [
             5 => 30,
-            4 => 45,
-            3 => 60,
-            2 => 90,
-            1 => 99999,
+            4 => 60,
+            3 => 90,
+            2 => 180,
+            1 => 99999999999999999,
         ];
         public $frequency_formula = [
             5 => 99999,
@@ -30,10 +30,10 @@
         ];
         public $monetary_formula  = [
             5 => 99999,
-            4 => 300,
-            3 => 150,
-            2 => 100,
-            1 => 50,
+            4 => 1000,
+            3 => 500,
+            2 => 250,
+            1 => 100,
         ];
         
         public $priority = 'RFM';
@@ -43,8 +43,8 @@
                 'name' => 'Best Customer',
                 'rfm'  => [
                     'r' => [3, 4, 5],
-                    'f' => [4, 5],
-                    'm' => [4, 5],
+                    'f' => [3, 4, 5],
+                    'm' => [3, 4, 5],
                 ],
             ],
             'loyal_customer'            => [
@@ -59,8 +59,8 @@
                 'name' => 'New Customer',
                 'rfm'  => [
                     'r' => [4, 5],
-                    'f' => [1, 2],
-                    'm' => [1, 2],
+                    'f' => [1, 2, 3],
+                    'm' => [1, 2, 3],
                 ],
             ],
             'promising_customer'        => [
@@ -104,6 +104,7 @@
                 ],
             ],
         ];
+        public $c_cont          = [];
         
         public function __construct($buy_list){
             
@@ -213,18 +214,27 @@
             
             $user_score = $score??$this->score_calc();
             
+            //$c_cont = [];
             $result_cat = [];
             foreach($this->customer_groups as $group_name => $detail){
                 foreach($user_score as $customer_id => $customer_rfm_score){
                     
                     if(in_array($customer_rfm_score['r'], $detail['rfm']['r']) and in_array($customer_rfm_score['f'], $detail['rfm']['f']) and in_array($customer_rfm_score['m'], $detail['rfm']['m'])){
-                        //echo $customer_id.' Eklendi'."\n\n";
                         $result_cat[$group_name][$customer_id] = $customer_rfm_score['score'];
+                        $this->c_cont[$customer_id]            = $customer_rfm_score['score'];
+                    }
+                    else{
+                        //$result_cat['other'][$customer_id] = $customer_rfm_score['score'];
                     }
                     
                 }
                 
             }
+            
+            $t_musteri = count($this->buy_list);
+            $k_musteri = count($this->c_cont);
+            
+            echo $t_musteri.' Müşteriden. '.$k_musteri.' adeti kategorilendirildi. '.($t_musteri - $k_musteri).' adet müşteri kaldı'."\n";
             
             return $result_cat;
         }

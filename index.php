@@ -15,3 +15,10 @@
     print_r($recency_calc);
     //print_r($fake_data);
     
+    /*
+    foreach($customer->buy_list as $customer_id => $c_detail){
+        if(!isset($customer->c_cont[$customer_id])){
+            echo $customer->buy_list[$customer_id];
+        }
+    }
+    */
